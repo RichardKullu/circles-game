@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+        <title>dark maze</title>
+        <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            min-height: 100dvh;
+            background: #000;
+            font-family: 'Courier New', monospace;
+            color: #ccc;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+            -webkit-touch-callout: none;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #bg-fx {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        #game {
+            position: fixed;
+            z-index: 5;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #death-fx {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 50;
+            pointer-events: none;
+            display: none;
+        }
+
+        .hud {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 11px;
+            color: #444;
+            z-index: 10;
+        }
+
+        .hud span {
+            color: #dc143c;
+        }
+
+        .hint {
+            position: fixed;
+            bottom: max(20px, env(safe-area-inset-bottom));
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 9px;
+            color: #222;
+            z-index: 10;
+        }
+
+        .hint span {
+            color: #333;
+        }
+
+        #intro {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.92);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+        }
+
+        #intro .title {
+            font-size: clamp(20px, 5vw, 36px);
+            color: #dc143c;
+            margin-bottom: 28px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+        }
+
+        #intro .rules {
+            max-width: 380px;
+            line-height: 1.8;
+            font-size: clamp(11px, 2.5vw, 14px);
+            color: #777;
+        }
+
+        #intro .rules b {
+            color: #ccc;
+            font-weight: normal;
+        }
+
+        #intro .rules .safe {
+            color: #dc143c;
+        }
+
+        #intro .rules .danger {
+            color: #555;
+        }
+
+        #intro .controls {
+            margin-top: 28px;
+            font-size: clamp(11px, 2.5vw, 13px);
+            color: #555;
+            line-height: 2;
+        }
+
+        #intro .controls kbd {
+            display: inline-block;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 3px;
+            padding: 1px 7px;
+            font-family: inherit;
+            font-size: inherit;
+            color: #aaa;
+        }
+
+        #intro .start {
+            margin-top: 36px;
+            font-size: clamp(10px, 2vw, 12px);
+            color: #333;
+            animation: pulse-start 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-start {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+        </style>
+    </head>
+    <body>
+        <div id="intro">
+            <div class="title">dark maze</div>
+            <div class="rules">
+                <b>reach the bottom-right corner</b><br>
+                you can only see nearby cells<br><br>
+                step only on <span class="safe">bright crimson</span> cells<br>
+                <span class="danger">white cells</span> &mdash; death<br>
+                <span class="danger">dim cells</span> &mdash; death<br>
+                <span class="danger">walls</span> &mdash; death<br><br>
+                each death teaches you the maze
+            </div>
+            <div class="controls" id="intro-controls"></div>
+            <div class="start" id="intro-start"></div>
+        </div>
+        <canvas id="bg-fx"></canvas>
+        <div class="hud">attempt <span id="attempts">1</span></div>
+        <canvas id="game"></canvas>
+        <canvas id="death-fx"></canvas>
+        <div class="hint">
+            <span>swipe</span> or <span>arrows</span> to move &nbsp;
+            reach the exit &nbsp;
+            avoid white &amp; dark cells
+        </div>
+        <script src="index.js"></script>
+    </body>
+</html>
